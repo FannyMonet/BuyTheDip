@@ -21,5 +21,7 @@ module.exports = {
     '@typescript-eslint',
   ],
   rules: {
+    /* disable prop-types to use React.FunctionComponent type instead of typings props */
+    'react/prop-types': "off"
   },
 };

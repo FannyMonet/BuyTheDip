@@ -12,7 +12,7 @@ interface IAppState {
 }
 
 interface IAppContext {
-  setToken: (string) => void;
+  setToken: (token: string) => void;
 }
 
 const initialState: IAppState = {
@@ -33,7 +33,7 @@ export const AppReducer = (state: IAppState, action: Actions<ActionTypes>) => {
   }
 };
 
-export const AppProvider = ({ children }: { children: JSX.Element }) => {
+export const AppProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
 
   return (

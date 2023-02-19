@@ -12,5 +12,17 @@ model Users {
   username String @unique @db.VarChar(50)
   password String @db.VarChar(200)
 
+  orders Orders[]
+
   @@map("users")
+}
+
+model Orders {
+  id             String   @id @unique @default(uuid()) @db.Uuid
+  price          Float
+  expirationDate DateTime @map("expiration_date")
+  Users          Users    @relation(fields: [usersId], references: [id])
+  usersId        String   @db.Uuid
+
+  @@map("orders")
 }

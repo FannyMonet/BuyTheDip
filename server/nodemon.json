@@ -1,11 +1,12 @@
 {
   "watch": [
-    "src"
+    "src",
+    ".env"
   ],
   "ignore": [
     "node_modules"
   ],
   "ext": "ts,js,json",
-  "exec": "etsc && node ./dist/index.js",
+  "exec": "etsc && node -r dotenv/config ./dist/index.js",
   "legacyWatch": true
 }

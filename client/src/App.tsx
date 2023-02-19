@@ -16,7 +16,7 @@ function App() {
   const { token, setToken } = useAppContext();
 
   useEffect(() => {
-    fetch("http://localhost:4242/hello")
+    fetch("http://localhost:8080/hello")
       .then(() => setConnected(true))
       .catch(() => setConnected(false));
   }, []);

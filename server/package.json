@@ -4,13 +4,22 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "@fastify/cors": "^8.2.0",
+    "@prisma/client": "4.10.1",
     "bcryptjs": "^2.4.3",
-    "fastify": "^4.13.0"
+    "dotenv": "^16.0.3",
+    "fastify": "^4.13.0",
+    "jsonwebtoken": "^9.0.0",
+    "pino-pretty": "^9.3.0",
+    "prisma": "^4.10.1"
   },
   "scripts": {
-    "start": "nodemon"
+    "start": "nodemon",
+    "db": "docker run --rm -v smartrenting:/var/lib/postgresql/data -e POSTGRES_PASSWORD=postgres --env-file .env -p 5432:5432 postgres:13.3-alpine"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/jsonwebtoken": "^9.0.1",
     "@types/node": "^18.13.0",
     "esbuild": "^0.17.8",
     "esbuild-node-tsc": "^2.0.5",

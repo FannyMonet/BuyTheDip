@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../../contexts/AppContext";
+import {
+  fetchDeleteOrder,
+  fetchGetOrder,
+  fetchPostOrder,
+  fetchPutOrder,
+} from "./orders";
 import { useStatistics } from "./statistics";
 import "./Trade.css";
 export type Order = {
@@ -27,55 +33,28 @@ export default function Trade() {
   } = useStatistics(orders);
 
   useEffect(() => {
-    fetch("http://localhost:8080/orders", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        const orders = (res.body.orders as Order[]).sort(
-          (prev, next) =>
-            new Date(prev.expirationDate).getTime() -
-            new Date(next.expirationDate).getTime()
-        );
-        setOrders(orders);
-      });
+    fetchGetOrder(token).then((res) => {
+      const orders = res.sort(
+        (prev, next) =>
+          new Date(prev.expirationDate).getTime() -
+          new Date(next.expirationDate).getTime()
+      );
+      setOrders(orders);
+    });
   }, [reloadId]);
 
   const addOrder = (price: number) =>
-    fetch("http://localhost:8080/orders", {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ price }),
-    }).then(() => {
+    fetchPutOrder(token)(price).then(() => {
       setReloadId((n) => n + 1);
       setPrice(0);
     });
   const editOrder = (id: string, price: number) =>
-    fetch(`http://localhost:8080/orders/${id}`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ price }),
-    }).then(() => {
+    fetchPostOrder(token)(id, price).then(() => {
       setReloadId((n) => n + 1);
       setEditPrice(null);
     });
   const deleteOrder = (id: string) =>
-    fetch(`http://localhost:8080/orders/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    }).then(() => {
+    fetchDeleteOrder(token)(id).then(() => {
       setReloadId((n) => n + 1);
     });
 

@@ -5,7 +5,7 @@ import Login from "./scopes/Login/Login";
 
 import "./App.css";
 import { AppProvider, useAppContext } from "./contexts/AppContext";
-import TokenHandler from "./scopes/TokenHandler/TokenHandler";
+import ContextHandler from "./scopes/ContextHandler/ContextHandler";
 import Trade from "./scopes/Trade/Trade";
 
 // The famous nullable boolean we inherited from Java
@@ -50,7 +50,7 @@ function App() {
             </Link>
           </Route>
         </Switch>
-        <Route path="*" component={TokenHandler}></Route>
+        <Route path="*" component={ContextHandler}></Route>
       </Router>
     </div>
   );

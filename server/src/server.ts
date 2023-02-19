@@ -20,7 +20,7 @@ const createApp = async (jwtSecret: string) => {
 
   fastify.register(cors, {
     origin: "*",
-    methods: ["POST", "GET", "PUT"],
+    methods: ["POST", "GET", "PUT", "DELETE"],
     allowedHeaders: [
       "Origin",
       "X-Requested-With",
@@ -130,6 +130,84 @@ const createApp = async (jwtSecret: string) => {
           () => res.status(201).send(),
           () => res.status(502).send()
         );
+    }
+  );
+
+  fastify.post<{ Body: { price: number }; Params: { id: string } }>(
+    "/orders/:id",
+    {
+      schema: {
+        params: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+          },
+          required: ["id"],
+        },
+        body: {
+          type: "object",
+          properties: {
+            price: { type: "number" },
+          },
+          required: ["price"],
+        },
+      },
+      preHandler: authHandler,
+    },
+    async (req, res) => {
+      const { price } = req.body;
+      const { id } = req.params;
+      const usersId: string = (req as any)[userIdKey];
+      const order = await prisma.orders.findUnique({ where: { id } });
+      if (order === null) {
+        res.status(404).send();
+      } else if (order.usersId !== usersId) {
+        res.status(403);
+      } else {
+        return prisma.orders
+          .update({
+            where: { id },
+            data: { price },
+          })
+          .then(
+            () => res.status(201).send(),
+            () => res.status(502).send()
+          );
+      }
+    }
+  );
+  fastify.delete<{ Params: { id: string } }>(
+    "/orders/:id",
+    {
+      schema: {
+        params: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+          },
+          required: ["id"],
+        },
+      },
+      preHandler: authHandler,
+    },
+    async (req, res) => {
+      const { id } = req.params;
+      const usersId: string = (req as any)[userIdKey];
+      const order = await prisma.orders.findUnique({ where: { id } });
+      if (order === null) {
+        res.status(404).send();
+      } else if (order.usersId !== usersId) {
+        res.status(403);
+      } else {
+        return prisma.orders
+          .delete({
+            where: { id },
+          })
+          .then(
+            () => res.status(201).send(),
+            () => res.status(502).send()
+          );
+      }
     }
   );
   return fastify;

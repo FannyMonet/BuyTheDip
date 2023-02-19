@@ -28,7 +28,7 @@ export default function Login() {
       })
       .then((res) => {
         if (res.body.token) {
-          history.push(`/trade?token=${res.body?.token}`);
+          history.push(`/trade?token=${res.body?.token}&username=${username}`);
         } else {
           throw new Error("Internal server error");
         }

@@ -4,6 +4,7 @@
   padding: 1rem;
   background-color: white;
   height: 100%;
+  overflow: auto;
 }
 
 .table {

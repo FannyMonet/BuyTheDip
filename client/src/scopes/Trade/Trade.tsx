@@ -1,7 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppContext } from "../../contexts/AppContext";
+import { useStatistics } from "./statistics";
 import "./Trade.css";
-type Order = {
+export type Order = {
   id: string;
   price: number;
   expirationDate: string;
@@ -12,32 +13,18 @@ export default function Trade() {
   const { token, username } = useAppContext();
   const [orders, setOrders] = useState<Order[]>([]);
   const [price, setPrice] = useState<number | null>(null);
-  const [expirationDate, setExpirationDate] = useState<string | null>(null);
-  const [expiredAtSum, setExpiredAtSum] = useState<number | null>(null);
   const [editPrice, setEditPrice] = useState<{
     price: number;
     id: string;
   } | null>(null);
 
-  const ordersAveragePrice = useMemo(
-    () => orders.reduce((sum, { price }) => sum + price, 0) / orders.length,
-    [orders]
-  );
-
-  const sumGroupByUser = useMemo(
-    () =>
-      Object.entries(
-        orders.reduce<Record<string, number>>((sumByUser, order) => {
-          return {
-            ...sumByUser,
-            [order.username]: sumByUser.hasOwnProperty(order.username)
-              ? sumByUser[order.username]
-              : 0 + order.price,
-          };
-        }, {})
-      ).sort(([, prevPrice], [, nextPrice]) => nextPrice - prevPrice),
-    [orders]
-  );
+  const {
+    ordersAveragePrice,
+    sumGroupByUser,
+    sumExpiredAt,
+    expirationDate,
+    setExpirationDate,
+  } = useStatistics(orders);
 
   useEffect(() => {
     fetch("http://localhost:8080/orders", {
@@ -56,14 +43,6 @@ export default function Trade() {
         setOrders(orders);
       });
   }, [reloadId]);
-
-  const sumExpiredAt = (date: Date) =>
-    orders
-      .filter(
-        ({ expirationDate }) =>
-          new Date(date).getTime() > new Date(expirationDate).getTime()
-      )
-      .reduce((sum, order) => sum + order.price, 0);
 
   const addOrder = (price: number) =>
     fetch("http://localhost:8080/orders", {
@@ -190,18 +169,8 @@ export default function Trade() {
           value={expirationDate ?? ""}
           onChange={({ target: { value } }) => setExpirationDate(value)}
         ></input>
-        <button
-          onClick={() => {
-            if (expirationDate !== null) {
-              const sum = sumExpiredAt(new Date(expirationDate));
-              setExpiredAtSum(sum);
-            }
-          }}
-        >
-          Calculate sum
-        </button>
         <p>
-          Sum of the item which expire at {expirationDate}: {expiredAtSum}
+          Sum of the item which expire at {expirationDate}: {sumExpiredAt}
         </p>
         <p>Average price: {ordersAveragePrice}</p>
         <p>Sums by users:</p>

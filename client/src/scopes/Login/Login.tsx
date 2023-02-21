@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router";
+import { serverHost } from "../../App";
 
 import "./Login.css";
 
@@ -10,7 +11,7 @@ export default function Login() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const login = (username: string, password: string) =>
-    fetch("http://localhost:8080/login", {
+    fetch(`${serverHost}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

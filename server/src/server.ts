@@ -1,13 +1,19 @@
 import fastifyInstance from "fastify";
 import { default as cors } from "@fastify/cors";
-import bcrypt from "bcryptjs";
+import * as bcrypt from "bcryptjs";
 import pretty from "pino-pretty";
 import pino from "pino";
 import { PrismaClient } from "@prisma/client";
 import { authHandler, generateToken, userIdKey } from "./auth";
 
 const createApp = async (jwtSecret: string) => {
-  const prisma = new PrismaClient();
+  const prisma = new PrismaClient({
+    datasources: {
+      db: {
+        url: `postgresql://postgres:postgres@${process.env.DB_HOST}:5432/smartrenting`,
+      },
+    },
+  });
 
   const stream = pretty({
     colorize: true,

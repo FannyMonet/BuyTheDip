@@ -14,8 +14,13 @@
     "prisma": "^4.10.1"
   },
   "scripts": {
-    "start": "nodemon",
-    "db": "docker run --rm -v smartrenting:/var/lib/postgresql/data -e POSTGRES_PASSWORD=postgres --env-file .env -p 5432:5432 postgres:13.3-alpine"
+    "dev": "nodemon",
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "docker:network": "docker network create smart",
+    "db": "docker run --rm --network smart --network-alias db -v smartrenting:/var/lib/postgresql/data -e POSTGRES_PASSWORD=postgres --env-file .env -p 5432:5432 postgres:13.3-alpine",
+    "docker:build": "docker build -t server .",
+    "docker": "docker run --rm --network smart --network-alias server -e DB_HOST=db --env PORT=8080 --env JWT_SECRET=6jfznqihn7uo2v77e89s1x1p --env DATABASE_URL=postgresql://postgres:postgres@localhost:5432/smartrenting -p 8080:8080 server"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",

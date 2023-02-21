@@ -20,15 +20,12 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "serve": "serve -s build",
+    "docker": "docker run --rm --network smart -e SERVER_HOST=server -p 3000:3000 client",
+    "docker:build": "docker build -t client .",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [

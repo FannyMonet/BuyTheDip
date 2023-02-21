@@ -11,12 +11,16 @@ import Trade from "./scopes/Trade/Trade";
 // The famous nullable boolean we inherited from Java
 type nullableBoolean = boolean | null;
 
+export const serverHost = process.env.SERVER_HOST
+  ? `${process.env.SERVER_HOST}:8080`
+  : "http://0.0.0.0:8080";
+
 function App() {
   const [connected, setConnected] = useState<nullableBoolean>(null);
   const { token, setToken } = useAppContext();
 
   useEffect(() => {
-    fetch("http://localhost:8080/hello")
+    fetch(`${serverHost}/hello`)
       .then(() => setConnected(true))
       .catch(() => setConnected(false));
   }, []);

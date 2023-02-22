@@ -45,6 +45,11 @@ PS: In real life, I swear I never put secrets in the package.json file or any gi
 ```shell
 cd ../client
 ```
+Install dependencies
+
+```shell
+yarn
+```
 
 Build the client image
 

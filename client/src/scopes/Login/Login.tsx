@@ -1,8 +1,7 @@
+import { Button, Container, Stack, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { useHistory } from "react-router";
 import { serverHost } from "../../App";
-
-import "./Login.css";
 
 export default function Login() {
   const history = useHistory();
@@ -39,36 +38,38 @@ export default function Login() {
       });
 
   return (
-    <div className="Login">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (username === null) {
-            setErrorMessage("Enter username");
-          } else if (password === null) {
-            setErrorMessage("Enter password");
-          } else {
-            login(username, password);
-          }
-        }}
-      >
-        <label htmlFor="username">Username</label>
-        <input
-          id="username"
+    <Container>
+      <Stack px="30%" py={8} spacing={4}>
+        <TextField
+          label="Username"
           type="text"
           value={username ?? ""}
           onChange={({ target: { value } }) => setUsername(value)}
+          variant="outlined"
         />
-        <label htmlFor="username">Password</label>
-        <input
-          id="password"
+        <TextField
+          label="Password"
           type="password"
           value={password ?? ""}
           onChange={({ target: { value } }) => setPassword(value)}
+          variant="outlined"
         />
-        <button type="submit">Login</button>
+        <Button
+          variant="contained"
+          onClick={() => {
+            if (username === null) {
+              setErrorMessage("Enter username");
+            } else if (password === null) {
+              setErrorMessage("Enter password");
+            } else {
+              login(username, password);
+            }
+          }}
+        >
+          Login
+        </Button>
         {errorMessage && <p>{errorMessage}</p>}
-      </form>
-    </div>
+      </Stack>
+    </Container>
   );
 }

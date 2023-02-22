@@ -3,13 +3,19 @@ import { BrowserRouter as Router, Link, Switch, Route } from "react-router-dom";
 
 import Login from "./scopes/Login/Login";
 
-import "./App.css";
 import { AppProvider, useAppContext } from "./contexts/AppContext";
 import ContextHandler from "./scopes/ContextHandler/ContextHandler";
 import Trade from "./scopes/Trade/Trade";
+import { Container, Stack, styled } from "@mui/material";
 
 // The famous nullable boolean we inherited from Java
 type nullableBoolean = boolean | null;
+
+const Logo = styled("img")({
+  height: "100px",
+  maxWidth: "50%",
+  "pointer-events": "none",
+});
 
 export const serverHost = process.env.SERVER_HOST
   ? `${process.env.SERVER_HOST}:8080`
@@ -26,37 +32,44 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      <header className="App-header">
+    <>
+      <Stack
+        color="white"
+        alignItems="center"
+        justifyContent="center"
+        minHeight="20vh"
+        sx={{ background: "#282c34" }}
+      >
         <h5>{`Can't stop, won't stop,`}</h5>
-        <img
+        <Logo
           src="https://cdn.worldvectorlogo.com/logos/gamestop.svg"
-          className="App-logo"
           alt="logo"
         />
-      </header>
-      <Router>
-        <Switch>
-          <Route path="/login" component={Login}></Route>
-          {token && (
-            <>
-              <Route path="/trade" component={Trade}></Route>
-            </>
-          )}
-          <Route path="*" exact>
-            <h1>
-              API:
-              {connected === true && " connected"}
-              {connected === false && " not connected"}
-            </h1>
-            <Link className="login" to="/login">
-              Login
-            </Link>
-          </Route>
-        </Switch>
-        <Route path="*" component={ContextHandler}></Route>
-      </Router>
-    </div>
+      </Stack>
+      <Container>
+        <Router>
+          <Switch>
+            <Route path="/login" component={Login}></Route>
+            {token && (
+              <>
+                <Route path="/trade" component={Trade}></Route>
+              </>
+            )}
+            <Route path="*" exact>
+              <h1>
+                API:
+                {connected === true && " connected"}
+                {connected === false && " not connected"}
+              </h1>
+              <Link className="login" to="/login">
+                Login
+              </Link>
+            </Route>
+          </Switch>
+          <Route path="*" component={ContextHandler}></Route>
+        </Router>
+      </Container>
+    </>
   );
 }
 const WrappedApp = () => (

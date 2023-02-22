@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../../contexts/AppContext";
 import { fetchGetOrder } from "./orders";
-import "./Trade.css";
 import Statistics from "./Statistics";
 import PricesTable from "./PricesTable";
 import PriceForm from "./PriceForm";
+import { Container, Stack } from "@mui/material";
 export type Order = {
   id: string;
   price: number;
@@ -28,12 +28,14 @@ export default function Trade() {
   }, [reloadId]);
 
   return (
-    <div className="Trade">
-      <div className="table">
-        <PriceForm setReloadId={setReloadId} />
-        <PricesTable orders={orders} setReloadId={setReloadId} />
-      </div>
-      <Statistics orders={orders} />
-    </div>
+    <Container>
+      <Stack direction="row" py={4} spacing={3}>
+        <Stack flex={2}>
+          <PriceForm setReloadId={setReloadId} />
+          <PricesTable orders={orders} setReloadId={setReloadId} />
+        </Stack>
+        <Statistics orders={orders} />
+      </Stack>
+    </Container>
   );
 }

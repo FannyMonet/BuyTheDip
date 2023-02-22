@@ -1,3 +1,4 @@
+import { List, ListItem, Paper, Stack, TextField } from "@mui/material";
 import React from "react";
 import { useStatistics } from "./statisticsHook";
 import { Order } from "./Trade";
@@ -14,24 +15,28 @@ const Statistics: React.FC<StatisticsProps> = ({ orders }) => {
     setExpirationDate,
   } = useStatistics(orders);
   return (
-    <div className="stats">
-      <label>Expiration date</label>
-      <input
-        type="date"
-        value={expirationDate ?? ""}
-        onChange={({ target: { value } }) => setExpirationDate(value)}
-      ></input>
-      <p>
-        Sum of the item which expire at {expirationDate}: {sumExpiredAt}
-      </p>
-      <p>Average price: {ordersAveragePrice}</p>
-      <p>Sums by users:</p>
-      <ul>
-        {sumGroupByUser.map(([username, sum]) => (
-          <li key={username}>{`${username}: ${sum}`}</li>
-        ))}
-      </ul>
-    </div>
+    <Paper sx={{ background: "#e2e2e2", p: 3 }}>
+      <Stack>
+        <TextField
+          InputLabelProps={{ shrink: true }}
+          label="Expiration date"
+          variant="outlined"
+          type="date"
+          value={expirationDate ?? ""}
+          onChange={({ target: { value } }) => setExpirationDate(value)}
+        ></TextField>
+        <p>
+          Sum of the item which expire at {expirationDate}: {sumExpiredAt}
+        </p>
+        <p>Average price: {ordersAveragePrice}</p>
+        <p>Sums by users:</p>
+        <List>
+          {sumGroupByUser.map(([username, sum]) => (
+            <ListItem key={username} divider>{`${username}: ${sum}`}</ListItem>
+          ))}
+        </List>
+      </Stack>
+    </Paper>
   );
 };
 

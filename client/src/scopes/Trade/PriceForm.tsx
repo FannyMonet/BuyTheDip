@@ -1,3 +1,4 @@
+import { Button, Stack, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { useAppContext } from "../../contexts/AppContext";
 import { fetchPutOrder } from "./orders";
@@ -16,29 +17,27 @@ const PriceForm: React.FC<PriceFormProps> = ({ setReloadId }) => {
     });
 
   return (
-    <div className="control">
-      <label htmlFor="price">
-        Price
-        <input
-          type="number"
-          id="price"
-          value={price ?? 0}
-          onChange={({ target: { value } }) => {
-            const newPrice = parseInt(value);
-            if (!Number.isNaN(newPrice)) {
-              setPrice(newPrice);
-            }
-          }}
-        ></input>
-      </label>
-      <button
+    <Stack direction="row" justifyContent="space-between">
+      <TextField
+        label="Price"
+        type="number"
+        value={price ?? 0}
+        onChange={({ target: { value } }) => {
+          const newPrice = parseInt(value);
+          if (!Number.isNaN(newPrice)) {
+            setPrice(newPrice);
+          }
+        }}
+      ></TextField>
+      <Button
+        variant="outlined"
         onClick={() => {
           if (price !== null && price !== 0) {
             addOrder(price);
           }
         }}
-      >{`Ajouter une option d'achat`}</button>
-    </div>
+      >{`Ajouter une option d'achat`}</Button>
+    </Stack>
   );
 };
 export default PriceForm;
